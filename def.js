@@ -1536,8 +1536,6 @@ let listadoJugadores = [
    ]
 
 
-//console.log('Tamaño de primera generación: ', tamanioGeneracion0)
-
 const factorPrecision = 0.0001;
 
 // Función objetivo
@@ -1567,7 +1565,6 @@ function encontrarMaxMin(array) {
     return { max, min };
   }
 
-
 // Determinar número de cromosomas
 function calcularCantidadCromosomas(b, a, c) {
     // Calculamos el valor de la expresión
@@ -1583,7 +1580,6 @@ function calcularCantidadCromosomas(b, a, c) {
 // console.log(cantidadCromosomas)
 
 //Crear cromosomas y añadirlos al objeto
-//console.log(decimalABinario(84,13))
 
 function decimalABinario(decimal) {
     // Convertimos el número decimal a binario
@@ -1608,6 +1604,8 @@ function agregarGen(){
         listadoJugadores[index].gen1 = decimalABinario(jugador.PG)
         listadoJugadores[index].gen2 = decimalABinario(jugador.TR)
         listadoJugadores[index].gen3 = decimalABinario(jugador.RE)
+        listadoJugadores[index].genCompleto = decimalABinario(jugador.PG)+decimalABinario(jugador.TR)+decimalABinario(jugador.RE)
+
     } )
 }
 
@@ -1661,21 +1659,69 @@ const Q = agregarValorQ()
 let w = parseFloat(Math.random().toFixed(2));
 // console.log(w)
 
-let tamanioGeneracion0 = Math.round(listadoJugadores.length * 0.4)
+let tamanioGeneracion = Math.round(listadoJugadores.length * 0.4)
 
 
-// REVISION
-let nuevaPoblacion = []
-for (let i = 0; i < tamanioGeneracion0; i++) {
-    let fi = (w+(i+1)-1)/tamanioGeneracion0
+// SELECCION
+let seleccion = []
+for (let i = 0; i < tamanioGeneracion; i++) {
+    let fi = (w+(i+1)-1)/tamanioGeneracion
     // console.log(fi)
     Q.forEach((q, index) =>{
         if (fi >= Q[index] && fi < Q[index + 1]) {
-            nuevaPoblacion.push(listadoJugadores[index-1])  
+            seleccion.push(listadoJugadores[index-1])  
         }
         return
     }) 
 }
-
-console.log(nuevaPoblacion)
+//console.log(seleccion)
 // console.log(nuevaPoblacion.length)
+
+//CRUCE
+function concatenarMitadesPorPares(array) {
+  const resultado = [...array]; // Copiamos el array original para no modificarlo directamente
+  
+  // Recorremos el array en pasos de 2 elementos
+  for (let i = 0; i < array.length; i += 2) {
+      // Aseguramos que tenemos un par de elementos
+      const genCompleto0 = array[i].genCompleto;
+      const genCompleto1 = array[i + 1] ? array[i + 1].genCompleto : null; // Verificamos si existe un par
+
+      // Si encontramos un par, concatenamos las mitades
+      if (genCompleto1) {
+          // Primera concatenación: primera mitad de genCompleto0 + segunda mitad de genCompleto1
+          const mitad1 = genCompleto0.slice(0, genCompleto0.length / 2); // Primera mitad del objeto i
+          const mitad2 = genCompleto1.slice(genCompleto1.length / 2); // Segunda mitad del objeto i+1
+
+          const nuevoGenCompleto1 = mitad1 + mitad2;
+
+          // Creamos un nuevo objeto con el GenCompleto concatenado
+          const nuevoObjeto1 = {
+              id: resultado.length + 1, // Asignamos un nuevo ID
+              genCompleto: nuevoGenCompleto1
+          };
+
+          // Segunda concatenación: segunda mitad de genCompleto0 + primera mitad de genCompleto1
+          const mitad3 = genCompleto0.slice(genCompleto0.length / 2); // Segunda mitad del objeto i
+          const mitad4 = genCompleto1.slice(0, genCompleto1.length / 2); // Primera mitad del objeto i+1
+
+          const nuevoGenCompleto2 = mitad4 + mitad3;
+
+          // Creamos otro nuevo objeto con el GenCompleto concatenado
+          const nuevoObjeto2 = {
+              id: resultado.length + 2, // Asignamos un nuevo ID
+              genCompleto: nuevoGenCompleto2
+          };
+
+          // Agregamos los nuevos objetos al array
+          resultado.push(nuevoObjeto1, nuevoObjeto2);
+      } 
+  }
+  
+  // Retornamos el array actualizado
+  return [...listadoJugadores,...resultado];
+}
+
+let cruce = concatenarMitadesPorPares(seleccion)
+console.log(cruce.length)
+console.log(listadoJugadores[0])
