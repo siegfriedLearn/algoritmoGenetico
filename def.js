@@ -1663,12 +1663,18 @@ let w = parseFloat(Math.random().toFixed(2));
 
 let tamanioGeneracion0 = Math.round(listadoJugadores.length * 0.4)
 
-for (let index = 0; i < tamanioGeneracion0; i++) {
+
+// REVISION
+let nuevaPoblacion = []
+for (let i = 0; i < tamanioGeneracion0; i++) {
     let fi = (w+(i+1)-1)/tamanioGeneracion0
-    let nuevaPoblacion = []
-    Q.forEach((jugador, index) =>{
+    
+    Q.forEach((q, index) =>{
         if (fi >= Q[i] && fi < Q[i + 1]) {
-            nuevaPoblacion = listadoJugadores[index-1]
+            nuevaPoblacion.push(listadoJugadores[index-1])
         }
     }) 
 }
+
+// console.log(nuevaPoblacion)
+console.log(nuevaPoblacion.length)
