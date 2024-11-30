@@ -1668,13 +1668,14 @@ let tamanioGeneracion0 = Math.round(listadoJugadores.length * 0.4)
 let nuevaPoblacion = []
 for (let i = 0; i < tamanioGeneracion0; i++) {
     let fi = (w+(i+1)-1)/tamanioGeneracion0
-    
+    // console.log(fi)
     Q.forEach((q, index) =>{
-        if (fi >= Q[i] && fi < Q[i + 1]) {
-            nuevaPoblacion.push(listadoJugadores[index-1])
+        if (fi >= Q[index] && fi < Q[index + 1]) {
+            nuevaPoblacion.push(listadoJugadores[index-1])  
         }
+        return
     }) 
 }
 
-// console.log(nuevaPoblacion)
-console.log(nuevaPoblacion.length)
+console.log(nuevaPoblacion)
+// console.log(nuevaPoblacion.length)
