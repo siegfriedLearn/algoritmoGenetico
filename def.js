@@ -1598,18 +1598,22 @@ function decimalABinario(decimal) {
     return binario;
   }
 
+
+
 function agregarGen(){
     listadoJugadores.forEach((jugador, index) =>{
         listadoJugadores[index].id = index
         listadoJugadores[index].gen1 = decimalABinario(jugador.PG)
         listadoJugadores[index].gen2 = decimalABinario(jugador.TR)
         listadoJugadores[index].gen3 = decimalABinario(jugador.RE)
-        listadoJugadores[index].genCompleto = decimalABinario(jugador.PG)+decimalABinario(jugador.TR)+decimalABinario(jugador.RE)
+        listadoJugadores[index].genCompleto = listadoJugadores[index].gen1 + listadoJugadores[index].gen2 + listadoJugadores[index].gen3
 
     } )
 }
 
 agregarGen()
+
+
 agregarValorAdaptacion()
 //console.log(listadoJugadores[0].gen[56])
 
@@ -1724,4 +1728,14 @@ function concatenarMitadesPorPares(array) {
 
 let cruce = concatenarMitadesPorPares(seleccion)
 console.log(cruce.length)
-console.log(listadoJugadores[0])
+// console.log(listadoJugadores[0])
+// function imprimirPropiedades(arr) {
+//   arr.forEach(obj => {
+//       for (let prop in obj) {
+//           if (obj.hasOwnProperty(prop)) {  // Verifica si la propiedad es propia del objeto
+//               console.log(`${prop}: ${obj[prop]}`);
+//           }
+//       }
+//   });
+// }
+// imprimirPropiedades(cruce)
