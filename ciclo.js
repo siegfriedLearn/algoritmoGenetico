@@ -1622,7 +1622,7 @@ function crearGeneraciones() {
     function agregarValorAdaptacion() {
       listadoJugadores.forEach((jugador, index) => {
         listadoJugadores[index].VA = (binarioADecimal(jugador.gen1) * 0.4) + (binarioADecimal(jugador.gen2) * 0.3) + (binarioADecimal(jugador.gen3) * 0.3)
-        console.log(listadoJugadores.indexOf(listadoJugadores[index]), listadoJugadores[index].VA)
+        // console.log(listadoJugadores.indexOf(listadoJugadores[index]), listadoJugadores[index].VA)
         // if (!listadoJugadores[index].VA) {
         //   console.log(listadoJugadores[index].VA)
         //   return
@@ -1752,21 +1752,25 @@ function crearGeneraciones() {
           };
 
           // Agregamos los nuevos objetos al array
-          resultado.push(nuevoObjeto1, nuevoObjeto2);
+          listadoJugadores.push(nuevoObjeto1, nuevoObjeto2);
         }
         hijosGenerados = [...resultado]
+        
       }
-
+      
       // Retornamos el array actualizado
       // return [...listadoJugadores,...resultado];
+      
       return [...listadoJugadores, ...resultado];
     }
+    
 
     listadoJugadores = cruzar(seleccion)
     // console.log(seleccion)
     // console.log(cruce.length)
+    agregarValorAdaptacion()
 
-
+    // console.log(listadoJugadores[listadoJugadores.length-1])
 
 
 
@@ -1866,7 +1870,7 @@ function crearGeneraciones() {
 
     // REEMPLAZO
 
-
+    agregarValorAdaptacion();
 
 
     function mostrarPoblacion(poblacion) {
@@ -1884,6 +1888,7 @@ function crearGeneraciones() {
         }))
       );
     }
+    // agregarValorAdaptacion()
     mostrarPoblacion(jugadoresMutados);
     // JUGADORESMUTADOS
 
