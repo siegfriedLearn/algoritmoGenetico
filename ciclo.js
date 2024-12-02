@@ -1615,7 +1615,7 @@ let jugadoresActualizado = agregarGen(listadoJugadores)
 // ##############################################
 function crearGeneraciones() {
 
-  for (let i = 0; i < 50; i++) {
+  for (let i = 0; i < 10; i++) {
     if (listadoJugadores.length===1) {
       return
     }
@@ -1902,26 +1902,27 @@ function crearGeneraciones() {
 
     // listadoJugadores = eliminarPeorAdaptados(listadoJugadores, (listadoJugadores.length*0.4));
 
-  // console.log('Cantidad de jugadores: ', listadoJugadores.length)
+  console.log('Cantidad de jugadores: ', listadoJugadores.length)
+  console.log('Estadisticas último jugador ', listadoJugadores[listadoJugadores.length-1])
 
-  function mostrarPoblacion(poblacion) {
-    console.table(
-      poblacion.map(jugador => ({
-        nombre: jugador.Nombre,
-        VA: jugador.VA,
-        // genCompleto: jugador.genCompleto,
-        gen1: jugador.gen1,
-        gen2: jugador.gen2,
-        gen3: jugador.gen3,
-        PG: jugador.PG,
-        TR: jugador.TR,
-        RE: jugador.RE,
-      }))
-    );
+  // function mostrarPoblacion(poblacion) {
+  //   console.table(
+  //     poblacion.map(jugador => ({
+  //       nombre: jugador.Nombre,
+  //       VA: jugador.VA,
+  //       // genCompleto: jugador.genCompleto,
+  //       gen1: jugador.gen1,
+  //       gen2: jugador.gen2,
+  //       gen3: jugador.gen3,
+  //       PG: jugador.PG,
+  //       TR: jugador.TR,
+  //       RE: jugador.RE,
+  //     }))
+  //   );
+  // }
+  // mostrarPoblacion(listadoJugadores);
   }
-  mostrarPoblacion(listadoJugadores);
-  }
-  
+  // console.log(listadoJugadores.length)
 }
 
 
