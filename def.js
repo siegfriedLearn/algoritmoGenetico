@@ -1669,6 +1669,17 @@ for (let i = 0; i < tamanioGeneracion; i++) {
         Q0 = jugador.Q
     }) 
 }
+function mostrarSeleccionados(seleccionados) {
+  console.log("Jugadores seleccionados para el cruce:");
+  console.table(
+    seleccionados.map((jugador) => ({
+      id: jugador.id,
+      nombre: jugador.Nombre || "Desconocido",
+      genCompleto: jugador.genCompleto,
+    }))
+  );
+}
+mostrarSeleccionados(seleccion);
 
 //CRUCE DE LOS PADRES PARA OBTENER A LOS HIJOS
 function concatenarMitadesPorPares(array) {
@@ -1720,7 +1731,6 @@ function concatenarMitadesPorPares(array) {
 let cruce = concatenarMitadesPorPares(seleccion)
 // console.log(seleccion)
 console.log(cruce.length)
-console.log(cruce[163])
 
 
 // const cruceOriginal = [...cruce];
@@ -1730,7 +1740,8 @@ console.log(cruce[163])
 
 // MUTACION
 function aplicarMutacion(originalJugadores) {
-  let jugadores = [...originalJugadores]
+  // Crear una copia profunda de los jugadores para evitar problemas de referencia
+  let jugadores = JSON.parse(JSON.stringify(originalJugadores));
   const tasaMutacion = 0.2; // 20% de la población para posible mutación
   const probabilidadCambio = 0.4; // w <= 0.4 para aplicar complemento
 
@@ -1740,35 +1751,35 @@ function aplicarMutacion(originalJugadores) {
   // Seleccionar aleatoriamente los individuos que pueden mutar
   const indicesParaMutacion = new Set();
   while (indicesParaMutacion.size < cantidadMutaciones) {
-      const indiceAleatorio = Math.floor(Math.random() * jugadores.length);
-      indicesParaMutacion.add(indiceAleatorio);
-      // console.log(indiceAleatorio)
+    const indiceAleatorio = Math.floor(Math.random() * jugadores.length);
+    indicesParaMutacion.add(indiceAleatorio);
   }
 
   // Aplicar mutación a los individuos seleccionados
-  indicesParaMutacion.forEach(indice => {
-      const jugador = jugadores[indice];
-      const w = Math.random(); // Generar probabilidad para decidir mutación
+  indicesParaMutacion.forEach((indice) => {
+    const jugador = jugadores[indice];
+    const w = Math.random(); // Generar probabilidad para decidir mutación
 
-      if (w <= probabilidadCambio) {
-          // Convertimos el genCompleto a un array de bits para mutarlo
-          let genArray = jugador.genCompleto.split('');
+    if (w <= probabilidadCambio) {
+      // Convertimos el genCompleto a un array de bits para mutarlo
+      let genArray = jugador.genCompleto.split('');
 
-          // Cambiar a complemento los bits en las posiciones c1, c3, c5, c7
-          [0, 2, 4, 6].forEach(index => {
-              if (index < genArray.length) {
-                  // Complemento: '0' -> '1', '1' -> '0'
-                  genArray[index] = genArray[index] === '0' ? '1' : '0';
-              }
-          });
+      // Cambiar a complemento los bits en las posiciones c1, c3, c5, c7
+      [0, 2, 4, 6].forEach((index) => {
+        if (index < genArray.length) {
+          // Complemento: '0' -> '1', '1' -> '0'
+          genArray[index] = genArray[index] === '0' ? '1' : '0';
+        }
+      });
 
-          // Reconstruimos el gen mutado y lo reasignamos al jugador
-          jugador.genCompleto = genArray.join('');
-      }
+      // Reconstruimos el gen mutado y lo reasignamos al jugador
+      jugador.genCompleto = genArray.join('');
+    }
   });
 
   return jugadores;
 }
+
 
 // Aplicar mutación
 let jugadoresMutados = aplicarMutacion(cruce);
@@ -1780,33 +1791,34 @@ let jugadoresMutados = aplicarMutacion(cruce);
 // COMPROBAR LA POBLACIÓN MUTADA
 function compararPoblaciones(poblacionOriginal, poblacionMutada) {
   if (poblacionOriginal.length !== poblacionMutada.length) {
-      console.error("Las poblaciones tienen tamaños diferentes.");
-      return;
+    console.error("Las poblaciones tienen tamaños diferentes.");
+    return;
   }
 
   const diferencias = [];
 
   for (let i = 0; i < poblacionOriginal.length; i++) {
-      const original = poblacionOriginal[i];
-      const mutada = poblacionMutada[i];
+    const original = poblacionOriginal[i];
+    const mutada = poblacionMutada[i];
 
-      if (original.genCompleto !== mutada.genCompleto) {
-          diferencias.push({
-              id: original.id,
-              nombre: original.Nombre,
-              genOriginal: original.genCompleto,
-              genMutado: mutada.genCompleto
-          });
-      }
+    if (original.genCompleto !== mutada.genCompleto) {
+      diferencias.push({
+        id: original.id,
+        nombre: original.Nombre || "Desconocido",
+        genOriginal: original.genCompleto,
+        genMutado: mutada.genCompleto,
+      });
+    }
   }
 
   if (diferencias.length === 0) {
-      console.log("No se encontraron diferencias entre la población original y la población mutada.");
+    console.log("No se encontraron diferencias entre la población original y la población mutada.");
   } else {
-      console.log("Diferencias encontradas entre la población original y la población mutada:");
-      console.table(diferencias);
+    console.log("Diferencias encontradas entre la población original y la población mutada:");
+    console.table(diferencias);
   }
 }
+
 
 // Uso de la función
 compararPoblaciones(cruce, jugadoresMutados); //(poblacionInicial, poblacionMutada)
