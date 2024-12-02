@@ -1670,75 +1670,81 @@ let w = parseFloat(Math.random().toFixed(2));
 let tamanioGeneracion = Math.round(listadoJugadores.length * 0.4)
 
 
-// SELECCION
-// let seleccion = []
-// for (let i = 0; i < tamanioGeneracion; i++) {
-//     let fi = (w+(i+1)-1)/tamanioGeneracion
-//     // console.log(fi)
-//     Q.forEach((q, index) =>{
-//         if (fi >= Q[index] && fi < Q[index + 1]) {
-//             seleccion.push(listadoJugadores[index-1])  
-//         }
-//         return
-//     }) 
-// }
 
-//console.log(seleccion)
+let seleccion = []
+for (let i = 0; i < tamanioGeneracion; i++) {
+    let fi = (w+(i+1)-1)/tamanioGeneracion
+    // console.log(fi)
+    let Q0 = 0
+    let Q1 = 0
+    listadoJugadores.forEach((jugador, index) =>{
+      Q1 = jugador.Q;
+        if (fi >= Q0 && fi < Q1) {
+            seleccion.push(listadoJugadores[index-1])  
+        }
+        Q0 = jugador.Q
+    }) 
+}
+// console.log(seleccion[0])
+// console.log(seleccion[46])
 // console.log(nuevaPoblacion.length)
 
-// //CRUCE
-// function concatenarMitadesPorPares(array) {
-//   const resultado = [...array]; // Copiamos el array original para no modificarlo directamente
+//CRUCE
+function concatenarMitadesPorPares(array) {
+  const resultado = []; // Copiamos el array original para no modificarlo directamente
   
-//   // Recorremos el array en pasos de 2 elementos
-//   for (let i = 0; i < array.length; i += 2) {
-//       // Aseguramos que tenemos un par de elementos
-//       const genCompleto0 = array[i].genCompleto;
-//       const genCompleto1 = array[i + 1] ? array[i + 1].genCompleto : null; // Verificamos si existe un par
+  // Recorremos el array en pasos de 2 elementos
+  for (let i = 0; i < array.length; i += 2) {
+      // Aseguramos que tenemos un par de elementos
+      const genCompleto0 = array[i] ? array[i].genCompleto: null
+      const genCompleto1 = array[i + 1] ? array[i + 1].genCompleto : null; // Verificamos si existe un par
 
-//       // Si encontramos un par, concatenamos las mitades
-//       console.log(i)
+      // Si encontramos un par, concatenamos las mitades
 
-//       if (genCompleto1) {
-//           // Primera concatenación: primera mitad de genCompleto0 + segunda mitad de genCompleto1
-//           const mitad1 = genCompleto0.slice(0, genCompleto0.length / 2); // Primera mitad del objeto i
-//           const mitad2 = genCompleto1.slice(genCompleto1.length / 2); // Segunda mitad del objeto i+1
+      if (genCompleto0 && genCompleto1) {
+          // Primera concatenación: primera mitad de genCompleto0 + segunda mitad de genCompleto1
+          const mitad1 = genCompleto0.slice(0, genCompleto0.length / 2); // Primera mitad del objeto i
+          const mitad2 = genCompleto1.slice(genCompleto1.length / 2); // Segunda mitad del objeto i+1
 
-//           const nuevoGenCompleto1 = mitad1 + mitad2;
+          const nuevoGenCompleto1 = mitad1 + mitad2;
 
-//           // Creamos un nuevo objeto con el GenCompleto concatenado
-//           const nuevoObjeto1 = {
-//               id: resultado.length + 1, // Asignamos un nuevo ID
-//               genCompleto: nuevoGenCompleto1
-//           };
+          // Creamos un nuevo objeto con el GenCompleto concatenado
+          const nuevoObjeto1 = {
+              id: resultado.length + 1, // Asignamos un nuevo ID
+              genCompleto: nuevoGenCompleto1
+          };
 
-//           // Segunda concatenación: segunda mitad de genCompleto0 + primera mitad de genCompleto1
-//           const mitad3 = genCompleto0.slice(genCompleto0.length / 2); // Segunda mitad del objeto i
-//           const mitad4 = genCompleto1.slice(0, genCompleto1.length / 2); // Primera mitad del objeto i+1
+          // Segunda concatenación: segunda mitad de genCompleto0 + primera mitad de genCompleto1
+          const mitad3 = genCompleto0.slice(genCompleto0.length / 2); // Segunda mitad del objeto i
+          const mitad4 = genCompleto1.slice(0, genCompleto1.length / 2); // Primera mitad del objeto i+1
 
-//           const nuevoGenCompleto2 = mitad4 + mitad3;
+          const nuevoGenCompleto2 = mitad4 + mitad3;
 
-//           // Creamos otro nuevo objeto con el GenCompleto concatenado
-//           const nuevoObjeto2 = {
-//               id: resultado.length + 2, // Asignamos un nuevo ID
-//               genCompleto: nuevoGenCompleto2
-//           };
+          // Creamos otro nuevo objeto con el GenCompleto concatenado
+          const nuevoObjeto2 = {
+              id: resultado.length + 2, // Asignamos un nuevo ID
+              genCompleto: nuevoGenCompleto2
+          };
 
-//           // Agregamos los nuevos objetos al array
-//           resultado.push(nuevoObjeto1, nuevoObjeto2);
-//       } 
-//   }
+          // Agregamos los nuevos objetos al array
+          resultado.push(nuevoObjeto1, nuevoObjeto2);
+      } 
+  }
   
-//   // Retornamos el array actualizado
-//   return [...listadoJugadores,...resultado];
-// }
+  // Retornamos el array actualizado
+  // return [...listadoJugadores,...resultado];
+  return [...listadoJugadores,...resultado];
+}
 
-// let cruce = concatenarMitadesPorPares(seleccion)
+// console.log(seleccion.length)
+let cruce = concatenarMitadesPorPares(seleccion)
+console.log(cruce[118])
+// console.log(cruce[161])
 
 // console.log(cruce[210])
-console.log(listadoJugadores[0])
-console.log(listadoJugadores[2])
-console.log(listadoJugadores[5])
+// console.log(seleccion[0])
+// console.log(seleccion[2])
+// console.log(seleccion[5])
 // console.log(jugadoresActualizado[0])
 
 // function imprimirPropiedades(arr) {
