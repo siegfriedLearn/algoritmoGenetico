@@ -1575,12 +1575,11 @@ function calcularCantidadCromosomas(b, a, c) {
   
     return Math.round(n);
   }
-//   console.log(max,min)
-  let cantidadCromosomas = calcularCantidadCromosomas(max, min,factorPrecision)
-// console.log(cantidadCromosomas)
+
+let cantidadCromosomas = calcularCantidadCromosomas(max, min,factorPrecision)
+
 
 //Crear cromosomas y añadirlos al objeto
-
 function decimalABinario(decimal) {
     // Convertimos el número decimal a binario
     let binario = decimal.toString(2);
@@ -1616,10 +1615,10 @@ let jugadoresActualizado = agregarGen(listadoJugadores)
 
 
 agregarValorAdaptacion()
-//console.log(listadoJugadores[0].gen[56])
 
 
-// Generamos valor de adaptación
+
+// GENERAR VALOR DE ADAPTACIÓN
 function agregarValorAdaptacion(){
     listadoJugadores.forEach((jugador, index) =>{
         listadoJugadores[index].VA = (binarioADecimal(jugador.gen1)*0.4)+(binarioADecimal(jugador.gen2)*0.3)+(binarioADecimal(jugador.gen3)*0.3)
@@ -1633,12 +1632,12 @@ function binarioADecimal(binario) {
   }
 
 
-// console.log(listadoJugadores[0].VA)
 
-// Generar la probabilidad
 
+// GENERAR LA SUMA DE TODOS LOS VALORES DE ADAPTACIÓN PARA CALCULAR LA PROBABILIDAD
 let acumuladoProbabilidad = listadoJugadores.reduce((acumulador, jugador)=> acumulador + jugador.VA, 0)
 
+// GENERAR PROBABILIDAD Y AGREGARLA AL ARRAY DE JUGADORES
 function agregarValorProbabilidad(){
   let Q = 0;
     listadoJugadores.forEach((jugador, index) =>{
@@ -1648,29 +1647,14 @@ function agregarValorProbabilidad(){
     } )
 }
 agregarValorProbabilidad()
-    // console.log(listadoJugadores[117])
-    // console.log(listadoJugadores.reduce((acumulador, jugador)=> acumulador + jugador.probabilidad, 0))
 
- 
-//     function agregarValorQ(){
-//         let q = [0]
-//         let suma=0;
-//         listadoJugadores.forEach((jugador, index) =>{
-//             suma += jugador.probabilidad
-//             q.push(suma)
-//         } )
-//         return q
-//     }
-// const Q = agregarValorQ()
-// console.log(listadoJugadores[117])
 
 let w = parseFloat(Math.random().toFixed(2));
-// console.log(w)
 
 let tamanioGeneracion = Math.round(listadoJugadores.length * 0.4)
 
 
-
+// SELECCIONAR A LOS QUE VAN A SER PADRES
 let seleccion = []
 for (let i = 0; i < tamanioGeneracion; i++) {
     let fi = (w+(i+1)-1)/tamanioGeneracion
@@ -1680,18 +1664,15 @@ for (let i = 0; i < tamanioGeneracion; i++) {
     listadoJugadores.forEach((jugador, index) =>{
       Q1 = jugador.Q;
         if (fi >= Q0 && fi < Q1) {
-            seleccion.push(listadoJugadores[index-1])  
+            seleccion.push(listadoJugadores[index])  
         }
         Q0 = jugador.Q
     }) 
 }
-// console.log(seleccion[0])
-// console.log(seleccion[46])
-// console.log(nuevaPoblacion.length)
 
-//CRUCE
+//CRUCE DE LOS PADRES PARA OBTENER A LOS HIJOS
 function concatenarMitadesPorPares(array) {
-  const resultado = []; // Copiamos el array original para no modificarlo directamente
+  const resultado = []; 
   
   // Recorremos el array en pasos de 2 elementos
   for (let i = 0; i < array.length; i += 2) {
@@ -1701,7 +1682,7 @@ function concatenarMitadesPorPares(array) {
 
       // Si encontramos un par, concatenamos las mitades
 
-      if (genCompleto0 && genCompleto1) {
+      if (genCompleto1) {
           // Primera concatenación: primera mitad de genCompleto0 + segunda mitad de genCompleto1
           const mitad1 = genCompleto0.slice(0, genCompleto0.length / 2); // Primera mitad del objeto i
           const mitad2 = genCompleto1.slice(genCompleto1.length / 2); // Segunda mitad del objeto i+1
@@ -1736,24 +1717,102 @@ function concatenarMitadesPorPares(array) {
   return [...listadoJugadores,...resultado];
 }
 
-// console.log(seleccion.length)
 let cruce = concatenarMitadesPorPares(seleccion)
-console.log(cruce[118])
-// console.log(cruce[161])
+// console.log(seleccion)
+console.log(cruce.length)
+console.log(cruce[163])
 
-// console.log(cruce[210])
-// console.log(seleccion[0])
-// console.log(seleccion[2])
-// console.log(seleccion[5])
-// console.log(jugadoresActualizado[0])
 
-// function imprimirPropiedades(arr) {
-//   arr.forEach(obj => {
-//       for (let prop in obj) {
-//           if (obj.hasOwnProperty(prop)) {  // Verifica si la propiedad es propia del objeto
-//               console.log(`${prop}: ${obj[prop]}`);
-//           }
-//       }
-//   });
-// }
-// imprimirPropiedades(cruce)
+// const cruceOriginal = [...cruce];
+// cruceOriginal[0].genCompleto = '0000'
+
+
+
+// MUTACION
+function aplicarMutacion(originalJugadores) {
+  let jugadores = [...originalJugadores]
+  const tasaMutacion = 0.2; // 20% de la población para posible mutación
+  const probabilidadCambio = 0.4; // w <= 0.4 para aplicar complemento
+
+  // Calcular el número de individuos que pueden mutar
+  const cantidadMutaciones = Math.round(jugadores.length * tasaMutacion);
+
+  // Seleccionar aleatoriamente los individuos que pueden mutar
+  const indicesParaMutacion = new Set();
+  while (indicesParaMutacion.size < cantidadMutaciones) {
+      const indiceAleatorio = Math.floor(Math.random() * jugadores.length);
+      indicesParaMutacion.add(indiceAleatorio);
+      // console.log(indiceAleatorio)
+  }
+
+  // Aplicar mutación a los individuos seleccionados
+  indicesParaMutacion.forEach(indice => {
+      const jugador = jugadores[indice];
+      const w = Math.random(); // Generar probabilidad para decidir mutación
+
+      if (w <= probabilidadCambio) {
+          // Convertimos el genCompleto a un array de bits para mutarlo
+          let genArray = jugador.genCompleto.split('');
+
+          // Cambiar a complemento los bits en las posiciones c1, c3, c5, c7
+          [0, 2, 4, 6].forEach(index => {
+              if (index < genArray.length) {
+                  // Complemento: '0' -> '1', '1' -> '0'
+                  genArray[index] = genArray[index] === '0' ? '1' : '0';
+              }
+          });
+
+          // Reconstruimos el gen mutado y lo reasignamos al jugador
+          jugador.genCompleto = genArray.join('');
+      }
+  });
+
+  return jugadores;
+}
+
+// Aplicar mutación
+let jugadoresMutados = aplicarMutacion(cruce);
+
+// Verificar resultados
+// console.log('Jugadores después de mutación:', jugadoresActualizado.length);
+
+
+// COMPROBAR LA POBLACIÓN MUTADA
+function compararPoblaciones(poblacionOriginal, poblacionMutada) {
+  if (poblacionOriginal.length !== poblacionMutada.length) {
+      console.error("Las poblaciones tienen tamaños diferentes.");
+      return;
+  }
+
+  const diferencias = [];
+
+  for (let i = 0; i < poblacionOriginal.length; i++) {
+      const original = poblacionOriginal[i];
+      const mutada = poblacionMutada[i];
+
+      if (original.genCompleto !== mutada.genCompleto) {
+          diferencias.push({
+              id: original.id,
+              nombre: original.Nombre,
+              genOriginal: original.genCompleto,
+              genMutado: mutada.genCompleto
+          });
+      }
+  }
+
+  if (diferencias.length === 0) {
+      console.log("No se encontraron diferencias entre la población original y la población mutada.");
+  } else {
+      console.log("Diferencias encontradas entre la población original y la población mutada:");
+      console.table(diferencias);
+  }
+}
+
+// Uso de la función
+compararPoblaciones(cruce, jugadoresMutados); //(poblacionInicial, poblacionMutada)
+
+// console.log(cruceOriginal[0].genCompleto) 
+// console.log(cruce[0].genCompleto) 
+// jugadoresMutados[163].genCompleto = 0;
+// console.log(jugadoresMutados[163])
+
