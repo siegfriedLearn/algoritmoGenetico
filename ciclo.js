@@ -1900,7 +1900,7 @@ function crearGeneraciones() {
       return jugadoresRestantes;
     }
 
-    listadoJugadores = eliminarPeorAdaptados(listadoJugadores, (listadoJugadores.length*0.4));
+    // listadoJugadores = eliminarPeorAdaptados(listadoJugadores, (listadoJugadores.length*0.4));
 
   // console.log('Cantidad de jugadores: ', listadoJugadores.length)
 
@@ -1909,17 +1909,17 @@ function crearGeneraciones() {
       poblacion.map(jugador => ({
         nombre: jugador.Nombre,
         VA: jugador.VA,
-        genCompleto: jugador.genCompleto,
+        // genCompleto: jugador.genCompleto,
         gen1: jugador.gen1,
         gen2: jugador.gen2,
         gen3: jugador.gen3,
-        // PG: jugador.PG,
-        // TR: jugador.TR,
-        // RE: jugador.RE,
+        PG: jugador.PG,
+        TR: jugador.TR,
+        RE: jugador.RE,
       }))
     );
   }
-  mostrarPoblacion(jugadoresMutados);
+  mostrarPoblacion(listadoJugadores);
   }
   
 }
