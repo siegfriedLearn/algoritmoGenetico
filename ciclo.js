@@ -1615,7 +1615,10 @@ let jugadoresActualizado = agregarGen(listadoJugadores)
 // ##############################################
 function crearGeneraciones() {
 
-  for (let i = 0; i < 4; i++) {
+  for (let i = 0; i < 50; i++) {
+    if (listadoJugadores.length===1) {
+      return
+    }
     agregarValorAdaptacion()
 
     // GENERAR VALOR DE ADAPTACIÓN
@@ -1873,54 +1876,52 @@ function crearGeneraciones() {
     agregarValorAdaptacion();
 
 
-    function mostrarPoblacion(poblacion) {
-      console.table(
-        poblacion.map(jugador => ({
-          nombre: jugador.Nombre,
-          VA: jugador.VA,
-          // genCompleto: jugador.genCompleto,
-          gen1: jugador.gen1,
-          gen2: jugador.gen2,
-          gen3: jugador.gen3,
-          // PG: jugador.PG,
-          // TR: jugador.TR,
-          // RE: jugador.RE,
-        }))
-      );
+    function eliminarPeorAdaptados(listadoJugadores, cantidadHijos) {
+      const h = 0.8;
+    
+      // Calcular la media de los valores de adaptación (f)
+      const sumaAdaptacion = listadoJugadores.reduce((suma, jugador) => suma + jugador.VA, 0);
+      const mediaAdaptacion = sumaAdaptacion / listadoJugadores.length;
+    
+      // Calcular el umbral para eliminación
+      const umbral = h * mediaAdaptacion;
+    
+      // Filtrar los jugadores con VA mayores al umbral
+      let jugadoresRestantes = listadoJugadores.filter(jugador => jugador.VA > umbral);
+    
+      // Si todavía hay más jugadores de los necesarios, eliminar los peor adaptados
+      if (jugadoresRestantes.length > listadoJugadores.length - cantidadHijos) {
+        // Ordenar por VA de menor a mayor y eliminar los más débiles
+        jugadoresRestantes = jugadoresRestantes
+          .sort((a, b) => a.VA - b.VA)
+          .slice(0, listadoJugadores.length - cantidadHijos);
+      }
+    
+      return jugadoresRestantes;
     }
-    // agregarValorAdaptacion()
-    mostrarPoblacion(jugadoresMutados);
-    // JUGADORESMUTADOS
 
-    // function eliminarPeorAdaptados(listadoJugadores, cantidadHijos) {
-    //   const h = 0.8;
-    
-    //   // Calcular la media de los valores de adaptación (f)
-    //   const sumaAdaptacion = listadoJugadores.reduce((suma, jugador) => suma + jugador.VA, 0);
-    //   const mediaAdaptacion = sumaAdaptacion / listadoJugadores.length;
-    
-    //   // Calcular el umbral para eliminación
-    //   const umbral = h * mediaAdaptacion;
-    
-    //   // Filtrar los jugadores con VA mayores al umbral
-    //   let jugadoresRestantes = listadoJugadores.filter(jugador => jugador.VA > umbral);
-    
-    //   // Si todavía hay más jugadores de los necesarios, eliminar los peor adaptados
-    //   if (jugadoresRestantes.length > listadoJugadores.length - cantidadHijos) {
-    //     // Ordenar por VA de menor a mayor y eliminar los más débiles
-    //     jugadoresRestantes = jugadoresRestantes
-    //       .sort((a, b) => a.VA - b.VA)
-    //       .slice(0, listadoJugadores.length - cantidadHijos);
-    //   }
-    
-    //   return jugadoresRestantes;
-    // }
+    listadoJugadores = eliminarPeorAdaptados(listadoJugadores, (listadoJugadores.length*0.4));
 
-    // listadoJugadores = eliminarPeorAdaptados(jugadoresMutados, (jugadoresMutados.length*0.4));
+  // console.log('Cantidad de jugadores: ', listadoJugadores.length)
 
-  console.log('Cantidad de jugadores: ',listadoJugadores.length)
-
+  function mostrarPoblacion(poblacion) {
+    console.table(
+      poblacion.map(jugador => ({
+        nombre: jugador.Nombre,
+        VA: jugador.VA,
+        genCompleto: jugador.genCompleto,
+        gen1: jugador.gen1,
+        gen2: jugador.gen2,
+        gen3: jugador.gen3,
+        // PG: jugador.PG,
+        // TR: jugador.TR,
+        // RE: jugador.RE,
+      }))
+    );
   }
+  mostrarPoblacion(jugadoresMutados);
+  }
+  
 }
 
 
