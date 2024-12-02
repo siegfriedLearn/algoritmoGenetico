@@ -1815,42 +1815,44 @@ function crearGeneraciones() {
 
 
     // COMPROBAR LA POBLACIÓN MUTADA
-    function compararPoblaciones(listadoJugadores, poblacionMutada) {
-      if (listadoJugadores.length !== poblacionMutada.length) {
-        console.error("Las poblaciones tienen tamaños diferentes.");
-        return;
-      }
+    // function compararPoblaciones(listadoJugadores, poblacionMutada) {
+    //   if (listadoJugadores.length !== poblacionMutada.length) {
+    //     console.error("Las poblaciones tienen tamaños diferentes.");
+    //     return;
+    //   }
 
-      const diferencias = [];
+    //   const diferencias = [];
 
-      for (let i = 0; i < listadoJugadores.length; i++) {
-        const original = listadoJugadores[i];
-        const mutada = poblacionMutada[i];
+    //   for (let i = 0; i < listadoJugadores.length; i++) {
+    //     const original = listadoJugadores[i];
+    //     const mutada = poblacionMutada[i];
 
-        if (original.genCompleto !== mutada.genCompleto) {
-          diferencias.push({
-            id: original.id,
-            nombre: original.Nombre || "Desconocido",
-            genOriginal: original.genCompleto,
-            genMutado: mutada.genCompleto,
-          });
-        }
-      }
+    //     if (original.genCompleto !== mutada.genCompleto) {
+    //       diferencias.push({
+    //         id: original.id,
+    //         nombre: original.Nombre || "Desconocido",
+    //         genOriginal: original.genCompleto,
+    //         genMutado: mutada.genCompleto,
+    //       });
+    //     }
+    //   }
 
-      if (diferencias.length === 0) {
-        console.log("No se encontraron diferencias entre la población original y la población mutada.");
-      } else {
-        console.log("Diferencias encontradas entre la población original y la población mutada:");
-        console.table(diferencias);
-      }
-    }
+    //   if (diferencias.length === 0) {
+    //     console.log("No se encontraron diferencias entre la población original y la población mutada.");
+    //   } else {
+    //     console.log("Diferencias encontradas entre la población original y la población mutada:");
+    //     console.table(diferencias);
+    //   }
+    // }
 
     // Uso de la función
-    compararPoblaciones(listadoJugadores, jugadoresMutados); //(poblacionInicial, poblacionMutada)
+    // compararPoblaciones(listadoJugadores, jugadoresMutados); //(poblacionInicial, poblacionMutada)
 
     // console.log(cruceOriginal[0].genCompleto) 
     // console.log(listadoJugadores.length)
+    listadoJugadores = jugadoresMutados
 
+    // compararPoblaciones(listadoJugadores, jugadoresMutados); //(poblacionInicial, poblacionMutada)
 
     // jugadoresMutados[163].genCompleto = 0;
     // console.log(jugadoresMutados[163])
@@ -1892,22 +1894,23 @@ function crearGeneraciones() {
   console.log('Cantidad de jugadores: ', listadoJugadores.length)
   console.log('Estadisticas último jugador ', listadoJugadores[listadoJugadores.length-1])
 
-  // function mostrarPoblacion(poblacion) {
-  //   console.table(
-  //     poblacion.map(jugador => ({
-  //       nombre: jugador.Nombre,
-  //       VA: jugador.VA,
-  //       // genCompleto: jugador.genCompleto,
-  //       gen1: jugador.gen1,
-  //       gen2: jugador.gen2,
-  //       gen3: jugador.gen3,
-  //       PG: jugador.PG,
-  //       TR: jugador.TR,
-  //       RE: jugador.RE,
-  //     }))
-  //   );
-  // }
-  // mostrarPoblacion(listadoJugadores);
+  function mostrarPoblacion(poblacion) {
+    console.table(
+      poblacion.map(jugador => ({
+        nombre: jugador.Nombre,
+        VA: jugador.VA,
+        // genCompleto: jugador.genCompleto,
+        gen1: jugador.gen1,
+        gen2: jugador.gen2,
+        gen3: jugador.gen3,
+        PG: jugador.PG,
+        TR: jugador.TR,
+        RE: jugador.RE,
+      }))
+    );
+  }
+  mostrarPoblacion(listadoJugadores);
+
   }
   // console.log(listadoJugadores.length)
 }
