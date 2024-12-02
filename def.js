@@ -1679,7 +1679,7 @@ function mostrarSeleccionados(seleccionados) {
     }))
   );
 }
-mostrarSeleccionados(seleccion);
+
 
 //CRUCE DE LOS PADRES PARA OBTENER A LOS HIJOS
 function concatenarMitadesPorPares(array) {
@@ -1700,22 +1700,37 @@ function concatenarMitadesPorPares(array) {
 
           const nuevoGenCompleto1 = mitad1 + mitad2;
 
+          const tamanoParte = Math.floor(nuevoGenCompleto1.length / 3);
+      const PG1 = binarioADecimal(nuevoGenCompleto1.slice(0, tamanoParte));
+      const TR1 = binarioADecimal(nuevoGenCompleto1.slice(tamanoParte, tamanoParte * 2));
+      const RE1 = binarioADecimal(nuevoGenCompleto1.slice(tamanoParte * 2));
+
           // Creamos un nuevo objeto con el GenCompleto concatenado
           const nuevoObjeto1 = {
               id: resultado.length + 1, // Asignamos un nuevo ID
-              genCompleto: nuevoGenCompleto1
+              genCompleto: nuevoGenCompleto1,
+              PG: PG1,
+              TR: TR1,
+              RE: RE1,
           };
+
 
           // Segunda concatenación: segunda mitad de genCompleto0 + primera mitad de genCompleto1
           const mitad3 = genCompleto0.slice(genCompleto0.length / 2); // Segunda mitad del objeto i
           const mitad4 = genCompleto1.slice(0, genCompleto1.length / 2); // Primera mitad del objeto i+1
 
           const nuevoGenCompleto2 = mitad4 + mitad3;
+          const PG2 = binarioADecimal(nuevoGenCompleto2.slice(0, tamanoParte));
+      const TR2 = binarioADecimal(nuevoGenCompleto2.slice(tamanoParte, tamanoParte * 2));
+      const RE2 = binarioADecimal(nuevoGenCompleto2.slice(tamanoParte * 2));
 
           // Creamos otro nuevo objeto con el GenCompleto concatenado
           const nuevoObjeto2 = {
               id: resultado.length + 2, // Asignamos un nuevo ID
-              genCompleto: nuevoGenCompleto2
+              genCompleto: nuevoGenCompleto2,
+              PG: PG2,
+              TR: TR2,
+              RE: RE2,
           };
 
           // Agregamos los nuevos objetos al array
@@ -1824,7 +1839,7 @@ function compararPoblaciones(poblacionOriginal, poblacionMutada) {
 compararPoblaciones(cruce, jugadoresMutados); //(poblacionInicial, poblacionMutada)
 
 // console.log(cruceOriginal[0].genCompleto) 
-// console.log(cruce[0].genCompleto) 
+// console.log(cruce[119]) 
 // jugadoresMutados[163].genCompleto = 0;
 // console.log(jugadoresMutados[163])
 
