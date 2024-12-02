@@ -1612,10 +1612,10 @@ function agregarGen(listadoJugadores) {
 let jugadoresActualizado = agregarGen(listadoJugadores)
 
 
-// ##############################################
+// ####### INICIO DE LOS CICLOS
 function crearGeneraciones() {
 
-  for (let i = 0; i < 10; i++) {
+  for (let i = 0; i < 4; i++) {
     if (listadoJugadores.length===1) {
       return
     }
@@ -1625,11 +1625,6 @@ function crearGeneraciones() {
     function agregarValorAdaptacion() {
       listadoJugadores.forEach((jugador, index) => {
         listadoJugadores[index].VA = (binarioADecimal(jugador.gen1) * 0.4) + (binarioADecimal(jugador.gen2) * 0.3) + (binarioADecimal(jugador.gen3) * 0.3)
-        // console.log(listadoJugadores.indexOf(listadoJugadores[index]), listadoJugadores[index].VA)
-        // if (!listadoJugadores[index].VA) {
-        //   console.log(listadoJugadores[index].VA)
-        //   return
-        // }
       })
     }
     function binarioADecimal(binario) {
@@ -1638,9 +1633,6 @@ function crearGeneraciones() {
 
       return decimal;
     }
-
-
-
 
     // GENERAR LA SUMA DE TODOS LOS VALORES DE ADAPTACIÓN PARA CALCULAR LA PROBABILIDAD
     let acumuladoProbabilidad = listadoJugadores.reduce((acumulador, jugador) => acumulador + jugador.VA, 0)
@@ -1677,16 +1669,16 @@ function crearGeneraciones() {
         Q0 = jugador.Q
       })
     }
-    function mostrarSeleccionados(seleccionados) {
-      console.log("Jugadores seleccionados para el cruce:");
-      console.table(
-        seleccionados.map((jugador) => ({
-          id: jugador.id,
-          nombre: jugador.Nombre || "Desconocido",
-          genCompleto: jugador.genCompleto,
-        }))
-      );
-    }
+    // function mostrarSeleccionados(seleccionados) {
+    //   console.log("Jugadores seleccionados para el cruce:");
+    //   console.table(
+    //     seleccionados.map((jugador) => ({
+    //       id: jugador.id,
+    //       nombre: jugador.Nombre || "Desconocido",
+    //       genCompleto: jugador.genCompleto,
+    //     }))
+    //   );
+    // }
 
     let hijosGenerados = []
     //CRUCE DE LOS PADRES PARA OBTENER A LOS HIJOS
@@ -1760,17 +1752,12 @@ function crearGeneraciones() {
         hijosGenerados = [...resultado]
         
       }
-      
-      // Retornamos el array actualizado
-      // return [...listadoJugadores,...resultado];
-      
       return [...listadoJugadores, ...resultado];
     }
     
 
     listadoJugadores = cruzar(seleccion)
-    // console.log(seleccion)
-    // console.log(cruce.length)
+    // NO BORRAR
     agregarValorAdaptacion()
 
     // console.log(listadoJugadores[listadoJugadores.length-1])
@@ -1829,15 +1816,15 @@ function crearGeneraciones() {
 
     // COMPROBAR LA POBLACIÓN MUTADA
     function compararPoblaciones(listadoJugadores, poblacionMutada) {
-      if (poblacionOriginal.length !== poblacionMutada.length) {
+      if (listadoJugadores.length !== poblacionMutada.length) {
         console.error("Las poblaciones tienen tamaños diferentes.");
         return;
       }
 
       const diferencias = [];
 
-      for (let i = 0; i < poblacionOriginal.length; i++) {
-        const original = poblacionOriginal[i];
+      for (let i = 0; i < listadoJugadores.length; i++) {
+        const original = listadoJugadores[i];
         const mutada = poblacionMutada[i];
 
         if (original.genCompleto !== mutada.genCompleto) {
@@ -1859,7 +1846,7 @@ function crearGeneraciones() {
     }
 
     // Uso de la función
-    // compararPoblaciones(listadoJugadores, jugadoresMutados); //(poblacionInicial, poblacionMutada)
+    compararPoblaciones(listadoJugadores, jugadoresMutados); //(poblacionInicial, poblacionMutada)
 
     // console.log(cruceOriginal[0].genCompleto) 
     // console.log(listadoJugadores.length)
