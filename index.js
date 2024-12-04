@@ -1538,7 +1538,7 @@ let listadoJugadores = [
 const factorPrecision = 0.0001;
 const tamanioPoblacion = 40;
 let poblacionCreada = [];
-const cantidadGeneraciones = 20;
+const cantidadGeneraciones = 4;
 
 // Función objetivo
 // f(x)=media ponderada de (PG, TR, RE ...)
@@ -1663,9 +1663,175 @@ function calcularX(min, max, coeficientes) {
 function crearGeneraciones(poblacionCreada, cantidadGeneraciones) {
 
     for (let i = 0; i < cantidadGeneraciones; i++) {
+        poblacionCreada[0]
         if (poblacionCreada.length === 1) {
             return
         }
-        let acumuladoProbabilidad = poblacionCreada.reduce((acumulador, obj) => acumulador + obj.VA, 0)
+
+        // INICIO PROCESO DE SELECCION
+        let acumuladoProbabilidad = poblacionCreada.reduce((acumulador, jugador) => acumulador + jugador.VA, 0);
+        // console.log(acumuladoProbabilidad)
+
+        function agregarValorProbabilidad() {
+            let Q = 0;
+            poblacionCreada.forEach((jugador, index) => {
+                // console.log(jugador.VA / acumuladoProbabilidad)
+                poblacionCreada[index].probabilidad = jugador.VA / acumuladoProbabilidad
+                Q += poblacionCreada[index].probabilidad;
+                poblacionCreada[index].Q = Q
+            })
+        }
+        agregarValorProbabilidad()
+
+        let w = parseFloat(Math.random().toFixed(2));
+        let tamanioSeleccion = Math.round(poblacionCreada.length * 0.4)
+
+        // SELECCIONAR A LOS QUE VAN A SER PADRES
+        let seleccion = []
+        for (let i = 0; i < tamanioSeleccion; i++) {
+            let fi = (w + (i + 1) - 1) / tamanioSeleccion
+            // console.log(fi)
+            let Q0 = 0
+            let Q1 = 0
+            poblacionCreada.forEach((jugador, index) => {
+                Q1 = jugador.Q;
+                if (fi >= Q0 && fi < Q1) {
+                    seleccion.push(poblacionCreada[index])
+                }
+                Q0 = jugador.Q
+            })
+        }
+        // MOSTRAR SELECCIONADOS
+        // console.log(seleccion)
+
+
+        //CRUCE DE LOS PADRES PARA OBTENER A LOS HIJOS
+        let hijosGenerados = []
+    function cruzar(seleccion) {
+        
+  
+        // Recorremos el seleccion en pasos de 2 elementos
+        for (let i = 0; i < seleccion.length; i += 2) {
+          // Aseguramos que tenemos un par de elementos
+          const gen0 = seleccion[i] ? seleccion[i].gen : null
+          const gen1 = seleccion[i + 1] ? seleccion[i + 1].gen : null; // Verificamos si existe un par
+        //   console.log(gen0)
+  
+          // Si encontramos un par, concatenamos las mitades
+  
+          if (gen1) {
+            // Primera concatenación: primera mitad de gen0 + segunda mitad de gen1
+            const mitad1 = gen0.slice(0, gen0.length / 2); // Primera mitad del objeto i
+            const mitad2 = gen1.slice(gen1.length / 2); // Segunda mitad del objeto i+1
+            // console.log(gen0)
+            // console.log(gen1)
+            // console.log(mitad1)
+            // console.log(mitad2)
+  
+            const nuevogen1 = [...mitad1,...mitad2];
+            // console.log(nuevogen1)
+  
+            let VA1 = calcularX(min, max, nuevogen1)
+  
+            // Creamos un nuevo objeto con el gen concatenado
+            const nuevoObjeto1 = {
+              gen: nuevogen1,
+              VA: VA1
+            };
+  
+  
+            // Segunda concatenación: segunda mitad de gen0 + primera mitad de gen1
+            const mitad3 = gen0.slice(gen0.length / 2); // Segunda mitad del objeto i
+            const mitad4 = gen1.slice(0, gen1.length / 2); // Primera mitad del objeto i+1
+  
+            const nuevogen2 = [...mitad4,...mitad3]
+
+            let VA2 = calcularX(min, max, nuevogen2)
+  
+  
+            // Creamos otro nuevo objeto con el gen concatenado
+            const nuevoObjeto2 = {
+              gen: nuevogen2,
+              VA: VA2
+            };
+  
+            // Agregamos los nuevos objetos al seleccion
+            poblacionCreada.push(nuevoObjeto1, nuevoObjeto2);
+            hijosGenerados.push(nuevoObjeto1, nuevoObjeto2)
+          }
+          
+          
+        }
+        // return [...poblacionCreada, ...resultado];
+      }
+
+      cruzar(seleccion)
+
+
+
+      // ELIMINACIÓN
+      let cantidadHijosGenerados = hijosGenerados.length
+      let VATotal = poblacionCreada.reduce((acumulador, jugador) => acumulador + jugador.VA, 0);
+      
+      
+
+    function eliminar(cantidadHijosGenerados, poblacionCreada, VATotal) {
+        let mediaVA = VATotal/poblacionCreada.length
+        const condicion = 0.95 * mediaVA;
+        // console.log(condicion)
+        
+        // console.log('Población inicial', poblacionCreada.length)
+    for (let i = 0; i < cantidadHijosGenerados; i++) {
+        const randomIndex = Math.floor(Math.random() * poblacionCreada.length);
+        // console.log(poblacionCreada[randomIndex].VA)
+        if (poblacionCreada[randomIndex].VA < condicion) {
+            poblacionCreada.splice(randomIndex,1)
+            // console.log('indice', i)
+            // console.log('VA del hijo', poblacionCreada[randomIndex].VA)
+        }
+        // console.log('Población luego de eliminación', poblacionCreada.length)
     }
+    }
+    
+
+    eliminar(cantidadHijosGenerados, poblacionCreada, VATotal)
+
+
+    //   console.log(seleccion.length)
+    
+    // console.log(cantidadHijosGenerados)
+        // console.log('Tamaño de la seleccion', tamanioSeleccion)
+        //   console.log(poblacionCreada.length)
+        console.table(poblacionCreada)
+    }
+
+    
 }
+
+crearGeneraciones(poblacionCreada, cantidadGeneraciones);
+
+function numeroMasRepetido(poblacionCreada) {
+    const conteo = {}; // Objeto para contar las repeticiones de cada valor de VA
+
+    // Contar las repeticiones de cada valor
+    poblacionCreada.forEach((obj) => {
+        const valor = obj.VA;
+        conteo[valor] = (conteo[valor] || 0) + 1;
+    });
+
+    // Encontrar el número más repetido
+    let maxRepeticiones = 0;
+    let numeroMasFrecuente = null;
+
+    for (const [valor, repeticiones] of Object.entries(conteo)) {
+        if (repeticiones > maxRepeticiones) {
+            maxRepeticiones = repeticiones;
+            numeroMasFrecuente = Number(valor);
+        }
+    }
+
+    return numeroMasFrecuente;
+}
+
+let valorMasRepetido = numeroMasRepetido(poblacionCreada)
+console.log(valorMasRepetido) 
