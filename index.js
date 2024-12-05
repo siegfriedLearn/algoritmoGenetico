@@ -1553,7 +1553,7 @@ function calcularVA(listadoJugadores) {
             Pais = 0;
         }
         if (Pos === 'Extremo izquierdo') {
-            Pos = 30;
+            Pos = 80;
         }
         else {
             Pos = 0;
@@ -1778,10 +1778,10 @@ function crearGeneraciones(poblacionCreada, cantidadGeneraciones) {
 
     function eliminar(cantidadHijosGenerados, poblacionCreada, VATotal) {
         let mediaVA = VATotal/poblacionCreada.length
-        const condicion = 0.8 * mediaVA;
+        const condicion = 0.95 * mediaVA;
         // console.log(condicion)
         
-        // console.log('Población inicial', poblacionCreada.length)
+        // console.log('Población INICIAL', poblacionCreada.length)
     for (let i = 0; i < cantidadHijosGenerados; i++) {
         const randomIndex = Math.floor(Math.random() * poblacionCreada.length);
         // console.log(poblacionCreada[randomIndex].VA)
@@ -1790,8 +1790,8 @@ function crearGeneraciones(poblacionCreada, cantidadGeneraciones) {
             // console.log('indice', i)
             // console.log('VA del hijo', poblacionCreada[randomIndex].VA)
         }
-        // console.log('Población luego de eliminación', poblacionCreada.length)
     }
+    // console.log('Población luego de eliminación', poblacionCreada.length)
     }
     
 
