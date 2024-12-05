@@ -1538,28 +1538,29 @@ let listadoJugadores = [
 const factorPrecision = 0.0001;
 const tamanioPoblacion = 40;
 let poblacionCreada = [];
-const cantidadGeneraciones = 4;
+const cantidadGeneraciones = 20;
 
 // Función objetivo
 // f(x)=media ponderada de (PG, TR, RE ...)
-// f(x)=0.15*PG +0.1*RT +0.15*TR +0.1*PA +0.15*RE +0.05*DF +0.1*FI +0.1*Pais+ 0.1*Categoria
+// f(x)=0.05*PG + 0.1*RT + 0.2*TR + 0.1*PA + 0.1*RE + 0.05*DF + 0.1*FI + 0.1* Pais + 0.2* Pos
 
 function calcularVA(listadoJugadores) {
     listadoJugadores.forEach((jugador, index) => {
-        let { PG, RT, TR, PA, RE, DF, FI, Pais, Cat } = jugador
+        let { PG, RT, TR, PA, RE, DF, FI, Pais, Pos } = jugador
         if (Pais === 'Francia' || Pais === 'Colombia') {
-            Pais = 2;
+            Pais = 40;
         } else {
             Pais = 0;
         }
-        if (Cat === 'Delantero') {
-            Cat = 2;
+        if (Pos === 'Extremo izquierdo') {
+            Pos = 30;
         }
         else {
-            Cat = 0;
+            Pos = 0;
         }
-        // console.log(PG,RT,TR,PA, RE, DF, FI, Pais, Cat)
-        listadoJugadores[index].VA = 0.15 * PG + 0.1 * RT + 0.15 * TR + 0.1 * PA + 0.15 * RE + 0.05 * DF + 0.1 * FI + 0.1 * Pais + 0.1 * Cat
+        // console.log(PG,RT,TR,PA, RE, DF, FI, Pais, Pos)
+        let VA = 0.05*PG + 0.1*RT + 0.2*TR + 0.1*PA + 0.1*RE + 0.05*DF + 0.1*FI + 0.1* Pais + 0.2* Pos
+        listadoJugadores[index].VA = Number(VA.toFixed(2))
     })
     return listadoJugadores;
 }
@@ -1649,7 +1650,7 @@ function calcularX(min, max, coeficientes) {
     // Calcular el valor de x
     const x = min + ((max - min) / (Math.pow(2, n) - 1)) * sumaPonderada;
 
-    return x;
+    return Number(x.toFixed(2));
 }
 
 // Ejemplo:
@@ -1777,7 +1778,7 @@ function crearGeneraciones(poblacionCreada, cantidadGeneraciones) {
 
     function eliminar(cantidadHijosGenerados, poblacionCreada, VATotal) {
         let mediaVA = VATotal/poblacionCreada.length
-        const condicion = 0.95 * mediaVA;
+        const condicion = 0.8 * mediaVA;
         // console.log(condicion)
         
         // console.log('Población inicial', poblacionCreada.length)
@@ -1802,11 +1803,11 @@ function crearGeneraciones(poblacionCreada, cantidadGeneraciones) {
     // console.log(cantidadHijosGenerados)
         // console.log('Tamaño de la seleccion', tamanioSeleccion)
         //   console.log(poblacionCreada.length)
-        console.table(poblacionCreada)
+        
     }
 
     
-}
+}//Fin ciclo crear generaciones
 
 crearGeneraciones(poblacionCreada, cantidadGeneraciones);
 
@@ -1833,5 +1834,25 @@ function numeroMasRepetido(poblacionCreada) {
     return numeroMasFrecuente;
 }
 
+console.table(listadoJugadores)
+        // console.table(poblacionCreada)
+
 let valorMasRepetido = numeroMasRepetido(poblacionCreada)
 console.log(valorMasRepetido) 
+
+function buscarValorMasCercano(array, valorObjetivo) {
+    let valorMasCercano = null;
+    let diferenciaMinima = Infinity;
+
+    array.forEach((obj) => {
+        const diferencia = Math.abs(obj.VA - valorObjetivo); // Calcular la diferencia absoluta
+        if (diferencia < diferenciaMinima) {
+            diferenciaMinima = diferencia;
+            valorMasCercano = obj;
+        }
+    });
+
+    return valorMasCercano;
+}
+
+console.log(buscarValorMasCercano(listadoJugadores, valorMasRepetido ))
